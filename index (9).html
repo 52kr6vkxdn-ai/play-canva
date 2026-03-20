@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA Engine</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="styles/main.css">
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+</head>
+<body class="no-select">
+<div id="layout">
+
+  <!-- ── TOP BAR ── -->
+  <div id="topbar">
+    <div style="display:flex;gap:18px;color:#ccc;flex:1;">
+      <span class="ib">Scene</span>
+      <span class="ib">Project</span>
+      <span class="ib">Debug</span>
+      <span class="ib">Editor</span>
+      <span class="ib">Help</span>
+    </div>
+    <div class="top-center-tabs" style="flex:0 0 auto;">
+      <button class="active">3D</button>
+      <button class="cbtn">Script</button>
+      <button class="cbtn" style="display:flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-book" style="font-size:10px;"></i>AssetLib
+      </button>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;flex:1;justify-content:flex-end;">
+      <i class="fa-solid fa-play  ib" id="btn-play"  style="color:#4caf50;" title="Play"></i>
+      <i class="fa-solid fa-pause ib" id="btn-pause" title="Pause"></i>
+      <i class="fa-solid fa-stop  ib" id="btn-stop"  style="color:#f44336;" title="Stop"></i>
+      <div style="width:1px;height:16px;background:#333;"></div>
+      <i class="fa-solid fa-desktop    ib" title="Desktop Mode"></i>
+      <i class="fa-solid fa-mobile-alt ib" title="Mobile Mode"></i>
+    </div>
+  </div>
+
+  <!-- ── MAIN ROW ── -->
+  <div id="main-row">
+
+    <!-- LEFT PANEL -->
+    <div id="left-panel" class="side-panel" style="width:220px;">
+      <div id="scene-split">
+
+        <!-- Scene Tree -->
+        <div class="ipanel" id="scene-pane" style="flex:1;min-height:80px;">
+          <div class="tab-bar">
+            <div class="tab on">Scene</div>
+            <div class="tab">Import</div>
+            <div style="flex:1;"></div>
+            <i class="fa-solid fa-ellipsis-v ib" style="padding:0 6px;"></i>
+          </div>
+          <div class="toolbar">
+            <i class="fa-solid fa-plus ib" id="btn-add-obj" title="Add Object"></i>
+            <i class="fa-solid fa-link ib"></i>
+            <input type="text" placeholder="Filter Nodes" id="filter-nodes">
+            <i class="fa-solid fa-sort-alpha-down ib"></i>
+          </div>
+          <div class="pane-body" id="hierarchy-list">
+            <div id="hierarchy-empty" style="opacity:0.5;text-align:center;margin-top:28px;font-size:11px;">
+              Hierarchy is empty.
+            </div>
+          </div>
+        </div>
+
+        <div class="drag-v" id="lv-handle"></div>
+
+        <!-- FileSystem -->
+        <div class="ipanel" id="fs-pane" style="height:220px;min-height:60px;">
+          <div class="tab-bar">
+            <div class="tab on">FileSystem</div>
+            <div class="tab">History</div>
+            <div style="flex:1;"></div>
+            <i class="fa-solid fa-ellipsis-v ib" style="padding:0 6px;"></i>
+          </div>
+          <div class="toolbar" style="gap:4px;">
+            <i class="fa-solid fa-chevron-left  ib" style="opacity:0.3;"></i>
+            <i class="fa-solid fa-chevron-right ib" style="opacity:0.3;"></i>
+            <div style="flex:1;background:#050505;border:1px solid #222;border-radius:3px;padding:3px 6px;color:#ccc;font-size:11px;">res://</div>
+            <i class="fa-regular fa-folder ib" style="margin-left:4px;"></i>
+          </div>
+          <div class="toolbar" style="padding-top:0;">
+            <input type="text" placeholder="Filter Files">
+          </div>
+          <div class="pane-body">
+            <div style="display:flex;align-items:center;gap:6px;padding:3px 4px;font-size:11px;color:#aaa;">
+              <i class="fa-solid fa-star" style="color:#c8a840;font-size:10px;"></i>Favorites
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;padding:4px;background:#1a1a1a;border-radius:3px;color:#fff;font-size:11px;cursor:pointer;margin-top:4px;">
+              <i class="fa-solid fa-caret-down" style="font-size:10px;"></i>
+              <i class="fa-regular fa-folder" style="color:#007acc;"></i>res://
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="drag-h" id="lh-handle"></div>
+
+    <!-- VIEWPORT COLUMN -->
+    <div id="viewport-col">
+
+      <div id="viewport-bar">
+        <div style="display:flex;align-items:center;gap:4px;">
+          <div id="cam-badge" style="display:flex;align-items:center;background:#0f0f0f;padding:3px 8px;border:1px solid #222;border-radius:3px;gap:8px;color:#ccc;font-size:11px;cursor:pointer;" title="Click to cycle camera">
+            scene1 <i class="fa-solid fa-chevron-down" style="font-size:9px;color:#666;"></i>
+          </div>
+          <i class="fa-solid fa-plus ib" style="padding:0 6px;"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <i class="fa-solid fa-mouse-pointer       ib gizmo-tool" data-mode="select" style="color:#fff;" title="Select (Q)"></i>
+          <i class="fa-solid fa-arrows-alt          ib gizmo-tool" data-mode="move"   title="Move (W)"></i>
+          <i class="fa-solid fa-sync-alt            ib gizmo-tool" data-mode="rotate" title="Rotate (E)"></i>
+          <i class="fa-solid fa-compress-arrows-alt ib gizmo-tool" data-mode="scale"  title="Scale (R)"></i>
+          <div style="width:1px;height:14px;background:#333;"></div>
+          <i class="fa-solid fa-cube   ib" id="btn-add-cube" title="Add Object"></i>
+          <i class="fa-solid fa-magnet ib" id="btn-snap"     title="Toggle Snap"></i>
+          <i class="fa-solid fa-th     ib" id="btn-grid"     title="Toggle Grid (G)"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <i class="fa-solid fa-ellipsis-v ib"></i>
+          <i class="fa-solid fa-expand     ib" id="btn-fullscreen" title="Fullscreen"></i>
+        </div>
+      </div>
+
+      <div id="bjs-wrap">
+        <canvas id="bjs-canvas"></canvas>
+
+        <div class="badge" style="top:12px;left:12px;" id="view-badge">
+          <i class="fa-solid fa-video" style="font-size:10px;margin-right:6px;color:#888;"></i>Perspective
+        </div>
+
+        <div id="stats-overlay">
+          FPS: <span id="stat-fps">0</span> &nbsp;|&nbsp;
+          Meshes: <span id="stat-meshes">0</span> &nbsp;|&nbsp;
+          Draw calls: <span id="stat-draws">0</span>
+        </div>
+
+        <!-- Add Object Popup Menu — built by ui/addMenu.js -->
+        <div id="add-obj-menu"></div>
+      </div>
+
+      <div class="drag-v" id="cv-handle"></div>
+
+      <div id="console-area" style="height:120px;min-height:28px;">
+        <div id="console-tabs">
+          <button class="cbtn" style="display:flex;align-items:center;gap:6px;color:#fff;">
+            <span style="width:8px;height:8px;border-radius:50%;background:#007acc;display:inline-block;"></span>Output
+          </button>
+          <button class="cbtn">Debugger</button>
+          <button class="cbtn">Audio</button>
+          <button class="cbtn">Animation</button>
+          <button class="cbtn">Shader Editor</button>
+          <div style="flex:1;"></div>
+          <button class="cbtn" id="btn-clear-console" title="Clear">
+            <i class="fa-solid fa-ban"></i>
+          </button>
+        </div>
+        <div id="console-body"></div>
+      </div>
+
+    </div>
+
+    <div class="drag-h" id="rh-handle"></div>
+
+    <!-- RIGHT PANEL — Inspector -->
+    <div id="right-panel" class="side-panel" style="width:260px;">
+      <div class="tab-bar">
+        <div class="tab on">Inspector</div>
+        <div class="tab">Node</div>
+        <div class="tab">History</div>
+      </div>
+      <div class="toolbar" style="border-bottom:1px solid #000;">
+        <i class="fa-solid fa-file-code ib"></i>
+        <i class="fa-solid fa-save      ib"></i>
+        <div style="flex:1;"></div>
+        <i class="fa-solid fa-undo      ib"></i>
+        <i class="fa-solid fa-redo      ib"></i>
+        <i class="fa-solid fa-ellipsis-v ib" style="margin-left:4px;"></i>
+      </div>
+      <div class="toolbar" style="border-bottom:1px solid #000;">
+        <input type="text" placeholder="Filter Properties">
+      </div>
+      <div id="inspector-body" style="flex:1;overflow-y:auto;">
+        <div id="inspector-empty" style="display:flex;align-items:center;justify-content:center;height:100%;opacity:0.3;font-size:11px;text-align:center;padding:16px;">
+          Select a node to edit its properties.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-row -->
+</div><!-- end layout -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCRIPT LOAD ORDER — dependencies must come before their consumers
+     ════════════════════════════════════════════════════════════════════ -->
+
+<!-- Core -->
+<script src="core/logger.js"></script>
+<script src="core/state.js"></script>
+<script src="core/engine.js"></script>
+<script src="core/gizmos.js"></script>
+<script src="core/materials.js"></script>
+
+<!-- Scene -->
+<script src="scene/shadows.js"></script>
+<script src="helpers/lightHelpers.js"></script>
+<script src="scene/grid.js"></script>
+<script src="scene/meshFactory.js"></script>
+<script src="scene/lightFactory.js"></script>
+
+<!-- UI -->
+<script src="ui/drag.js"></script>
+<script src="ui/hierarchy.js"></script>
+<script src="ui/inspector.js"></script>
+<script src="ui/addMenu.js"></script>
+<script src="ui/stats.js"></script>
+
+<!-- Helpers -->
+<script src="helpers/shortcuts.js"></script>
+
+<!-- Entry point -->
+<script src="main.js"></script>
+
+</body>
+</html>

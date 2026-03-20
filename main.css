@@ -1,0 +1,150 @@
+/* ── NOVA ENGINE — styles/main.css ───────────────────────────────────────── */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  overflow: hidden;
+  background: #0a0a0a;
+  color: #b3b3b3;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar            { width: 8px; height: 8px; }
+::-webkit-scrollbar-track      { background: #111111; }
+::-webkit-scrollbar-thumb      { background: #333333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover{ background: #555555; }
+
+.no-select { user-select: none; -webkit-user-select: none; }
+
+/* ── Layout ── */
+#layout    { display: flex; flex-direction: column; width: 100vw; height: 100vh; }
+#main-row  { display: flex; flex: 1; overflow: hidden; }
+
+/* ── Side panels ── */
+.side-panel     { display: flex; flex-direction: column; background: #0f0f0f; overflow: hidden; flex-shrink: 0; }
+#left-panel     { border-right: 1px solid #000; }
+#right-panel    { border-left:  1px solid #000; }
+
+/* ── Drag handles ── */
+.drag-h { width: 4px;  background: #000; cursor: col-resize; flex-shrink: 0; transition: background 0.15s; }
+.drag-v { height: 4px; background: #000; cursor: row-resize; flex-shrink: 0; transition: background 0.15s; }
+.drag-h:hover, .drag-h.active,
+.drag-v:hover, .drag-v.active { background: #007acc; }
+
+/* ── Viewport ── */
+#viewport-col { display: flex; flex-direction: column; flex: 1; min-width: 0; overflow: hidden; }
+#viewport-bar {
+  height: 32px; background: #141414; border-bottom: 1px solid #000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 8px; flex-shrink: 0;
+}
+#bjs-wrap    { flex: 1; position: relative; overflow: hidden; background: #050505; }
+#bjs-canvas  { width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+
+/* ── Top bar ── */
+#topbar {
+  height: 36px; background: #141414; border-bottom: 1px solid #000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px; flex-shrink: 0;
+}
+
+/* ── Console ── */
+#console-area  { background: #141414; border-top: 1px solid #000; display: flex; flex-direction: column; flex-shrink: 0; }
+#console-tabs  { display: flex; align-items: center; height: 28px; padding: 0 4px; background: #0f0f0f; }
+#console-body  {
+  flex: 1; overflow-y: auto; padding: 4px 8px; font-size: 11px;
+  background: #0a0a0a; font-family: 'Consolas', monospace;
+}
+
+/* ── Panel splits ── */
+#scene-split { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.ipanel      { display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── Tab bars ── */
+.tab-bar { display: flex; align-items: center; background: #141414; padding: 0 4px; flex-shrink: 0; }
+.tab { padding: 5px 12px; cursor: pointer; color: #888; white-space: nowrap; font-size: 12px; }
+.tab.on       { background: #0f0f0f; color: #fff; border-top: 2px solid #007acc; }
+.tab:hover:not(.on) { color: #ccc; }
+
+/* ── Pane body ── */
+.pane-body { flex: 1; overflow-y: auto; padding: 4px 8px; }
+
+/* ── Toolbar ── */
+.toolbar { display: flex; align-items: center; gap: 6px; padding: 6px 8px; flex-shrink: 0; }
+.toolbar input {
+  flex: 1; background: #050505; border: 1px solid #222; border-radius: 3px;
+  padding: 3px 6px; color: #fff; font-size: 11px; outline: none; transition: border-color 0.2s;
+}
+.toolbar input:focus { border-color: #007acc; }
+
+/* ── Icon buttons ── */
+.ib { color: #888; cursor: pointer; font-size: 12px; transition: color 0.15s; }
+.ib:hover { color: #fff; }
+
+/* ── Badges ── */
+.badge {
+  position: absolute; background: rgba(10,10,10,0.85); border: 1px solid #222;
+  padding: 3px 8px; border-radius: 4px; color: #ccc; font-size: 11px; cursor: pointer;
+}
+
+/* ── Stats overlay ── */
+#stats-overlay {
+  position: absolute; bottom: 12px; left: 12px;
+  background: rgba(10,10,10,0.8); border: 1px solid #222;
+  padding: 5px 10px; border-radius: 4px; font-family: 'Consolas', monospace;
+  font-size: 10px; color: #888; pointer-events: none; line-height: 1.6;
+}
+#stats-overlay span { color: #4caf50; }
+
+/* ── Generic buttons ── */
+.cbtn {
+  padding: 4px 10px; background: transparent; border: none; color: #888;
+  cursor: pointer; font-size: 12px; transition: color 0.15s, background 0.15s; border-radius: 3px;
+}
+.cbtn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+
+/* ── Top center mode tabs ── */
+.top-center-tabs {
+  display: flex; align-items: center; background: #0f0f0f; border-radius: 4px;
+  padding: 2px; border: 1px solid #222;
+}
+.top-center-tabs button {
+  padding: 4px 14px; border-radius: 3px; border: none; cursor: pointer;
+  font-size: 12px; font-weight: 500; color: #888; background: transparent;
+}
+.top-center-tabs button.active {
+  background: #1e1e1e; color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* ── Scene hierarchy nodes ── */
+.scene-node {
+  display: flex; align-items: center; gap: 6px; padding: 3px 6px;
+  border-radius: 3px; cursor: pointer; font-size: 11px; color: #aaa;
+}
+.scene-node:hover    { background: #1a1a1a; color: #fff; }
+.scene-node.selected { background: #0d3a5c; color: #fff; }
+.scene-node i        { font-size: 10px; width: 12px; }
+
+/* ── Add object popup menu ── */
+#add-obj-menu {
+  display: none; position: absolute; z-index: 1000;
+  background: #1a1a1a; border: 1px solid #333; border-radius: 6px;
+  padding: 6px 0; min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+#add-obj-menu.open { display: block; }
+
+.add-menu-section {
+  padding: 4px 10px 2px; font-size: 10px; color: #555;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.add-menu-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 14px; cursor: pointer; color: #aaa; font-size: 12px;
+  transition: background 0.1s, color 0.1s;
+}
+.add-menu-item:hover   { background: #0d3a5c; color: #fff; }
+.add-menu-item i       { width: 14px; font-size: 12px; color: #666; }
+.add-menu-item:hover i { color: #4da6ff; }
+.add-menu-sep          { height: 1px; background: #2a2a2a; margin: 4px 0; }
